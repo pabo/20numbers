@@ -4,21 +4,28 @@ import { useAtom } from "jotai";
 import {
   ARRAY_SIZE,
   LARGEST_NUMBER,
+  autoGenerateAtom,
   emptySlots,
+  highlightsAtom,
   numberAtom,
+  scoreAtom,
   slotsAtom,
 } from "./atoms";
+import { Controls } from "./Controls";
+import { isValidPlacement } from "./utils";
 
 export const Game = () => {
   const [number, setNumber] = useAtom(numberAtom);
   const [slots, setSlots] = useAtom(slotsAtom);
   const [hasError, setHasError] = useState(false);
-  const [autoGenerate, setAutoGenerate] = useState(true);
-  const [highlights, setHighlights] = useState(false);
+  const [autoGenerate] = useAtom(autoGenerateAtom);
+  const [highlights] = useAtom(highlightsAtom);
+  const [score, setScore] = useAtom(scoreAtom);
 
   const reset = () => {
     setNumber(autoGenerate ? generateNewNumber() : undefined);
     setSlots(emptySlots);
+    setScore(0);
   };
 
   const setNumberIfNotAlreadySet = (newNumber: number) => {
@@ -48,18 +55,7 @@ export const Game = () => {
       return;
     }
 
-    // check to make sure its a valid move
-    const isEmpty = slots[index] === "";
-    const previous = slots.slice(0, index);
-    const allPreviousAreLess = previous
-      .reverse()
-      .every((value) => value === "" || number === undefined || value < number);
-    const next = slots.slice(index);
-    const allNextAreGreater = next.every(
-      (value) => value === "" || number === undefined || value > number
-    );
-
-    if (!isEmpty || !allPreviousAreLess || !allNextAreGreater) {
+    if (!isValidPlacement(index, number, slots)) {
       setHasError(true);
       return;
     }
@@ -71,6 +67,8 @@ export const Game = () => {
     } else {
       setNumber(undefined);
     }
+
+    setScore((x) => x + 1);
   };
 
   return (
@@ -83,35 +81,12 @@ export const Game = () => {
         time. Place them in the list below so that you end up with an ordered
         list of {ARRAY_SIZE} numbers. Good luck!
       </div>
-      <div className="controls">
-        <button onClick={() => setNumberIfNotAlreadySet(generateNewNumber())}>
-          Generate
-        </button>
-        <button onClick={reset}>Reset</button>
-        <br />
-        auto-generate?{" "}
-        <input
-          type="checkbox"
-          checked={autoGenerate}
-          onChange={() => {
-            if (!autoGenerate) {
-              setNumberIfNotAlreadySet(generateNewNumber());
-            }
-            setAutoGenerate((x) => !x);
-          }}
-        />
-        highlights?{" "}
-        <input
-          type="checkbox"
-          checked={highlights}
-          onChange={() => {
-            setHighlights((x) => !x);
-          }}
-        />
-        <div className="current-number">
-          {slots.every((slot) => slot !== "") ? "You win!" : number}
-        </div>
-      </div>
+      <Controls
+        reset={reset}
+        generateNewNumber={generateNewNumber}
+        setNumberIfNotAlreadySet={setNumberIfNotAlreadySet}
+      />
+      Score: {score}
       <Slots handlePlaceNumber={handlePlaceNumber} hasError={hasError} />
     </div>
   );

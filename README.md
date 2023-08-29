@@ -5,3 +5,7 @@ This is a game where you try to create an ordered list of randomly generated num
 
 ## Live
 You can play here: [https://pabo.github.io/20numbers/]
+
+## TODOs
+- scores, save scores locally
+- better visuals
