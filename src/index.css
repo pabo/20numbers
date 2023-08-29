@@ -92,3 +92,28 @@ button:focus-visible {
  li:hover {
   color: #09c9c9
 }
+
+div.main {
+  width: 400px;
+}
+
+div.description {
+  text-align: left;
+}
+
+.slot {
+  border-radius: 1em;
+}
+
+.highlights .invalid:hover {
+  background-color: #c9c909;
+  cursor: default;
+}
+
+.highlights .valid:hover {
+  background-color: #09c9c9 
+}
+
+input {
+  margin-right: 2em;
+}

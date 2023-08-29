@@ -1,14 +1,20 @@
 import { useState } from "react";
-
-const ARRAY_SIZE = 20;
-const emptySlots = new Array(ARRAY_SIZE).fill("");
-const LARGEST_NUMBER = 1000;
+import { Slots } from "./Slots";
+import { useAtom } from "jotai";
+import {
+  ARRAY_SIZE,
+  LARGEST_NUMBER,
+  emptySlots,
+  numberAtom,
+  slotsAtom,
+} from "./atoms";
 
 export const Game = () => {
-  const [number, setNumber] = useState<number | undefined>();
-  const [slots, setSlots] = useState(emptySlots);
+  const [number, setNumber] = useAtom(numberAtom);
+  const [slots, setSlots] = useAtom(slotsAtom);
   const [hasError, setHasError] = useState(false);
-  const [autoGenerate, setAutoGenerate] = useState(false);
+  const [autoGenerate, setAutoGenerate] = useState(true);
+  const [highlights, setHighlights] = useState(false);
 
   const reset = () => {
     setNumber(autoGenerate ? generateNewNumber() : undefined);
@@ -31,6 +37,10 @@ export const Game = () => {
 
     return newNumber;
   };
+
+  if (autoGenerate && !number) {
+    setNumber(generateNewNumber());
+  }
 
   const handlePlaceNumber = (index: number) => {
     // if there's no number set, then ignore the click
@@ -65,26 +75,44 @@ export const Game = () => {
 
   return (
     <div
-      className={hasError ? "horizontal-shake" : ""}
+      className={`main ${highlights ? "highlights" : ""}`}
       onAnimationEnd={() => setHasError(false)}
     >
-      <button onClick={() => setNumberIfNotAlreadySet(generateNewNumber())}>
-        Generate
-      </button>
-      auto-generate?{" "}
-      <input type="checkbox" onChange={() => setAutoGenerate((x) => !x)} />
-      <button onClick={reset}>Reset</button>
-      <div className="current-number">
-        {slots.every((slot) => slot !== "") ? "You win!" : number}
+      <div className="description">
+        Random numbers between 1 and {LARGEST_NUMBER} will be generated one at a
+        time. Place them in the list below so that you end up with an ordered
+        list of {ARRAY_SIZE} numbers. Good luck!
       </div>
-      <ol>
-        {slots.map((slot, index) => (
-          <li onClick={() => handlePlaceNumber(index)} key={index}>
-            {slot}
-          </li>
-        ))}
-      </ol>
-      <br></br>
+      <div className="controls">
+        <button onClick={() => setNumberIfNotAlreadySet(generateNewNumber())}>
+          Generate
+        </button>
+        <button onClick={reset}>Reset</button>
+        <br />
+        auto-generate?{" "}
+        <input
+          type="checkbox"
+          checked={autoGenerate}
+          onChange={() => {
+            if (!autoGenerate) {
+              setNumberIfNotAlreadySet(generateNewNumber());
+            }
+            setAutoGenerate((x) => !x);
+          }}
+        />
+        highlights?{" "}
+        <input
+          type="checkbox"
+          checked={highlights}
+          onChange={() => {
+            setHighlights((x) => !x);
+          }}
+        />
+        <div className="current-number">
+          {slots.every((slot) => slot !== "") ? "You win!" : number}
+        </div>
+      </div>
+      <Slots handlePlaceNumber={handlePlaceNumber} hasError={hasError} />
     </div>
   );
 };
