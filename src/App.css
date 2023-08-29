@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+.links {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+}
