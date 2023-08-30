@@ -66,12 +66,22 @@ export const Slot: React.FC<SlotProps> = ({
   handlePlaceNumber,
   isValid,
 }) => {
+  const [currentNumber] = useAtom(currentNumberAtom);
+
+  const classNames = ["slot"];
+
+  if (slot) {
+    classNames.push("filled");
+  }
+
+  classNames.push(isValid ? "valid" : "invalid");
+
   return (
     <li
-      className={isValid ? "valid slot" : "invalid slot"}
+      className={classNames.join(" ")}
       onClick={() => handlePlaceNumber(index)}
     >
-      {slot}
+      <span>{slot ? slot : currentNumber}</span>
     </li>
   );
 };

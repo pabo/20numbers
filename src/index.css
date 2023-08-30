@@ -26,7 +26,6 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -39,7 +38,7 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding: 0.3em .6em;
   margin: 1em;
   font-size: 1em;
   font-weight: 500;
@@ -85,14 +84,6 @@ button:focus-visible {
   height: 1em;
  }
 
- li {
-  cursor: pointer
- }
-
- li:hover {
-  color: #09c9c9
-}
-
 div.main {
   width: 400px;
 }
@@ -103,6 +94,31 @@ div.description {
 
 .slot {
   border-radius: 1em;
+  cursor: default;
+}
+
+.slot:not(.filled) {
+  cursor: pointer;
+}
+
+.slot:not(.filled).invalid {
+  cursor: default;
+}
+
+.slot:not(.filled) span {
+  opacity: 0;
+}
+
+.slot:not(.filled).valid:hover span {
+  font-weight: bold;
+  opacity: 1;
+  color: black;
+}
+
+.slot:not(.filled).invalid:hover span {
+  font-weight: bold;
+  opacity: .1;
+  color: red;
 }
 
 .highlights .invalid:hover {
@@ -118,7 +134,8 @@ input {
   margin-right: 2em;
 }
 
-#game-over {
+/* this was a modal
+ #game-over {
   border: 5px solid #99c9c9;
   background-color: white;
   box-shadow: 10px 5px 5px #bbbbbb;
@@ -136,6 +153,12 @@ input {
   width: 50%;
 }
 
-#game-over.visible {
-  visibility: visible;
-}
+ */
+
+ .hidden {
+  opacity: 0;
+ }
+
+ .visible {
+  opacity: 1;
+ }

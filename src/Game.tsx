@@ -16,7 +16,7 @@ import {
   scoresAtom,
   slotsAtom,
 } from "./store";
-import { GameOver } from "./GameOver";
+import { GameState } from "./GameState";
 
 export const Game = () => {
   const [hasError, setHasError] = useState(false);
@@ -31,7 +31,7 @@ export const Game = () => {
   const reset = () => {
     setNumber(autoGenerate ? generateNewNumber(currentNumber, slots) : null);
     setSlots(emptySlots);
-    setScore(0);
+    setScore(ARRAY_SIZE);
   };
 
   const setNumberIfNotAlreadySet = (newNumber: number) => {
@@ -64,7 +64,7 @@ export const Game = () => {
       setNumber(null);
     }
 
-    setScore((x) => x + 1);
+    setScore((x) => x - 1);
   };
 
   if (autoGenerate && !currentNumber) {
@@ -86,11 +86,8 @@ export const Game = () => {
         generateNewNumber={generateNewNumber}
         setNumberIfNotAlreadySet={setNumberIfNotAlreadySet}
       />
-      Score: {score}
+      <GameState />
       <Slots handlePlaceNumber={handlePlaceNumber} hasError={hasError} />
-      <GameOver
-        visible={currentNumber !== null && isGameOver(currentNumber, slots)}
-      />
     </div>
   );
 };

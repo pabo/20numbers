@@ -53,11 +53,6 @@ export const Controls: React.FC<ControlsProps> = ({
           setHighlights((x) => !x);
         }}
       />
-      <div className="current-number">
-        {slots.every((slot: number | "") => slot !== "")
-          ? "You win!"
-          : currentNumber}
-      </div>
     </div>
   );
 };

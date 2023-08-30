@@ -5,13 +5,15 @@ export const ARRAY_SIZE = 20;
 export const emptySlots = new Array(ARRAY_SIZE).fill("");
 export const LARGEST_NUMBER = 1000;
 
-export const currentNumberAtom = atom<number | null>(null);
-export const slotsAtom = atom(emptySlots);
-export const autoGenerateAtom = atom(true);
-export const highlightsAtom = atom(false);
-
-export const scoreAtom = atomWithStorage("score", 0);
+export const currentNumberAtom = atomWithStorage<number | null>("currentNumber", null);
+export const slotsAtom = atomWithStorage("slots", emptySlots);
+export const autoGenerateAtom = atomWithStorage("autoGenerate", true);
+export const highlightsAtom = atomWithStorage("highlights", false);
+export const scoreAtom = atomWithStorage("score", ARRAY_SIZE);
 export const scoresAtom = atomWithStorage("scores", [1, 2, 3]);
+
+export const currentNumberStringAtom = atom((get) => get(currentNumberAtom)?.toString() || '')
+
 
 export type ISlot = number | "";
 
@@ -41,7 +43,11 @@ export const isValidPlacement = (
   return true;
 };
 
-export const isGameOver = (number: number, slots: ISlot[]): boolean => {
+export const isGameOver = (number: number| null, slots: ISlot[]): boolean => {
+  if (number === null) {
+    return false;
+  }
+
   let previous: number | "" = 0;
   for (const s of slots) {
     if (previous !== "" && previous < number && s !== "" && number < s) {
