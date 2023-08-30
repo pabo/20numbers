@@ -18,7 +18,9 @@ export const GameState: React.FC = () => {
   // TODO: BUG refreshing an ended game adds the score to the scores again
   useEffect(() => {
     if (gameOver) {
-      setScores((scores) => [...scores, score].sort());
+      setScores((scores) => {
+        return [...scores, score].sort((a, b) => a - b);
+      });
     }
   }, [gameOver]);
 
