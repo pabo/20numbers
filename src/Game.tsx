@@ -10,6 +10,7 @@ import {
   emptySlots,
   generateNewNumber,
   highlightsAtom,
+  hoveredSlotAtom,
   isValidPlacement,
   scoreAtom,
   slotsAtom,
@@ -24,6 +25,7 @@ export const Game = () => {
   const [autoGenerate] = useAtom(autoGenerateAtom);
   const [highlights] = useAtom(highlightsAtom);
   const [, setScore] = useAtom(scoreAtom);
+  const [, setHoveredSlot] = useAtom(hoveredSlotAtom);
 
   const reset = () => {
     setNumber(autoGenerate ? generateNewNumber(currentNumber, slots) : null);
@@ -57,6 +59,8 @@ export const Game = () => {
     }
 
     setScore((x) => x - 1);
+
+    setHoveredSlot(null);
   };
 
   if (autoGenerate && !currentNumber) {

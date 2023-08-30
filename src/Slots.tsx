@@ -1,5 +1,10 @@
 import { useAtom } from "jotai";
-import { slotsAtom, ARRAY_SIZE, currentNumberAtom } from "./store";
+import {
+  slotsAtom,
+  ARRAY_SIZE,
+  currentNumberAtom,
+  hoveredSlotAtom,
+} from "./store";
 
 type SlotsProps = {
   handlePlaceNumber: (index: number) => void;
@@ -67,6 +72,7 @@ export const Slot: React.FC<SlotProps> = ({
   isValid,
 }) => {
   const [currentNumber] = useAtom(currentNumberAtom);
+  const [, setHoveredSlot] = useAtom(hoveredSlotAtom);
 
   const classNames = ["slot"];
 
@@ -80,6 +86,8 @@ export const Slot: React.FC<SlotProps> = ({
     <li
       className={classNames.join(" ")}
       onClick={() => handlePlaceNumber(index)}
+      onMouseOver={isValid ? () => setHoveredSlot(index) : () => {}}
+      onMouseOut={isValid ? () => setHoveredSlot(null) : () => {}}
     >
       <span>{slot ? slot : currentNumber}</span>
     </li>
