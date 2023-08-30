@@ -1,25 +1,34 @@
 import { useAtom } from "jotai";
 import {
-  currentNumberAtom,
   currentNumberStringAtom,
-  isGameOver,
+  gameOverAtom,
+  highScoreAtom,
   scoreAtom,
-  slotsAtom,
+  scoresAtom,
 } from "./store";
+import { useEffect } from "react";
 
 export const GameState: React.FC = () => {
   const [score] = useAtom(scoreAtom);
-  const [currentNumber] = useAtom(currentNumberAtom);
+  const [, setScores] = useAtom(scoresAtom);
   const [currentNumberString] = useAtom(currentNumberStringAtom);
-  const [slots] = useAtom(slotsAtom);
+  const [gameOver] = useAtom(gameOverAtom);
+  const [highScore] = useAtom(highScoreAtom);
 
-  const gameIsOver = isGameOver(currentNumber, slots);
+  // TODO: BUG refreshing an ended game adds the score to the scores again
+  useEffect(() => {
+    if (gameOver) {
+      setScores((scores) => [...scores, score]);
+    }
+  }, [gameOver]);
 
   return (
-    // <div id="game-over" className={visible ? "visible" : ""}>
     <div>
-      <h2 className="score">Current: {score} Best: blah</h2>
-      <h1>{gameIsOver ? "Game Over!" : currentNumberString}</h1>
+      <h2 className="score">
+        Current: {score} Best: {highScore}
+      </h2>
+      <h2>{currentNumberString}</h2>
+      <h2>{gameOver && "Game Over!"}</h2>
     </div>
   );
 };

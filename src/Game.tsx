@@ -10,10 +10,8 @@ import {
   emptySlots,
   generateNewNumber,
   highlightsAtom,
-  isGameOver,
   isValidPlacement,
   scoreAtom,
-  scoresAtom,
   slotsAtom,
 } from "./store";
 import { GameState } from "./GameState";
@@ -25,8 +23,7 @@ export const Game = () => {
   const [slots, setSlots] = useAtom(slotsAtom);
   const [autoGenerate] = useAtom(autoGenerateAtom);
   const [highlights] = useAtom(highlightsAtom);
-  const [score, setScore] = useAtom(scoreAtom);
-  const [, setScores] = useAtom(scoresAtom);
+  const [, setScore] = useAtom(scoreAtom);
 
   const reset = () => {
     setNumber(autoGenerate ? generateNewNumber(currentNumber, slots) : null);
@@ -37,11 +34,6 @@ export const Game = () => {
   const setNumberIfNotAlreadySet = (newNumber: number) => {
     if (!currentNumber) {
       setNumber(newNumber);
-    }
-
-    // TODO: not working
-    if (newNumber && isGameOver(newNumber, slots)) {
-      setScores((previousScores) => [...previousScores, score]);
     }
   };
 
