@@ -110,7 +110,7 @@ div.description {
   cursor: default;
 }
 
-.highlights .valid:hover {
+.highlights .valid{
   background-color: #09c9c9 
 }
 
@@ -118,3 +118,24 @@ input {
   margin-right: 2em;
 }
 
+#game-over {
+  border: 5px solid #99c9c9;
+  background-color: white;
+  box-shadow: 10px 5px 5px #bbbbbb;
+  border-radius: 15px;
+  position: fixed;
+  top: 0%;
+  right: 25%;
+  bottom: 50%;
+  left: 25%;
+  z-index: 999;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all 0.3s;
+  height: 25%;
+  width: 50%;
+}
+
+#game-over.visible {
+  visibility: visible;
+}

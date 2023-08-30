@@ -1,15 +1,16 @@
 import { useAtom } from "jotai";
 import {
-  numberAtom,
-  slotsAtom,
+  ISlot,
   autoGenerateAtom,
+  currentNumberAtom,
   highlightsAtom,
-} from "./atoms";
+  slotsAtom,
+} from "./store";
 
 type ControlsProps = {
   reset: () => void;
   setNumberIfNotAlreadySet: (newNumber: number) => void;
-  generateNewNumber: () => number;
+  generateNewNumber: (number: number | null, slots: ISlot[]) => number;
 };
 
 export const Controls: React.FC<ControlsProps> = ({
@@ -17,14 +18,18 @@ export const Controls: React.FC<ControlsProps> = ({
   setNumberIfNotAlreadySet,
   generateNewNumber,
 }) => {
-  const [number] = useAtom(numberAtom);
+  const [currentNumber] = useAtom(currentNumberAtom);
   const [slots] = useAtom(slotsAtom);
   const [autoGenerate, setAutoGenerate] = useAtom(autoGenerateAtom);
   const [highlights, setHighlights] = useAtom(highlightsAtom);
 
   return (
     <div className="controls">
-      <button onClick={() => setNumberIfNotAlreadySet(generateNewNumber())}>
+      <button
+        onClick={() =>
+          setNumberIfNotAlreadySet(generateNewNumber(currentNumber, slots))
+        }
+      >
         Generate
       </button>
       <button onClick={reset}>Reset</button>
@@ -35,7 +40,7 @@ export const Controls: React.FC<ControlsProps> = ({
         checked={autoGenerate}
         onChange={() => {
           if (!autoGenerate) {
-            setNumberIfNotAlreadySet(generateNewNumber());
+            setNumberIfNotAlreadySet(generateNewNumber(currentNumber, slots));
           }
           setAutoGenerate((x) => !x);
         }}
@@ -49,7 +54,9 @@ export const Controls: React.FC<ControlsProps> = ({
         }}
       />
       <div className="current-number">
-        {slots.every((slot: number | "") => slot !== "") ? "You win!" : number}
+        {slots.every((slot: number | "") => slot !== "")
+          ? "You win!"
+          : currentNumber}
       </div>
     </div>
   );

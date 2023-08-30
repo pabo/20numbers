@@ -1,75 +1,75 @@
 import { useState } from "react";
 import { Slots } from "./Slots";
 import { useAtom } from "jotai";
+import { Controls } from "./Controls";
 import {
   ARRAY_SIZE,
   LARGEST_NUMBER,
   autoGenerateAtom,
+  currentNumberAtom,
   emptySlots,
+  generateNewNumber,
   highlightsAtom,
-  numberAtom,
+  isGameOver,
+  isValidPlacement,
   scoreAtom,
+  scoresAtom,
   slotsAtom,
-} from "./atoms";
-import { Controls } from "./Controls";
-import { isValidPlacement } from "./utils";
+} from "./store";
+import { GameOver } from "./GameOver";
 
 export const Game = () => {
-  const [number, setNumber] = useAtom(numberAtom);
-  const [slots, setSlots] = useAtom(slotsAtom);
   const [hasError, setHasError] = useState(false);
+
+  const [currentNumber, setNumber] = useAtom(currentNumberAtom);
+  const [slots, setSlots] = useAtom(slotsAtom);
   const [autoGenerate] = useAtom(autoGenerateAtom);
   const [highlights] = useAtom(highlightsAtom);
   const [score, setScore] = useAtom(scoreAtom);
+  const [, setScores] = useAtom(scoresAtom);
 
   const reset = () => {
-    setNumber(autoGenerate ? generateNewNumber() : undefined);
+    setNumber(autoGenerate ? generateNewNumber(currentNumber, slots) : null);
     setSlots(emptySlots);
     setScore(0);
   };
 
   const setNumberIfNotAlreadySet = (newNumber: number) => {
-    if (!number) {
+    if (!currentNumber) {
       setNumber(newNumber);
     }
+
+    // TODO: not working
+    if (newNumber && isGameOver(newNumber, slots)) {
+      setScores((previousScores) => [...previousScores, score]);
+    }
   };
-
-  const generateNewNumber = () => {
-    let newNumber;
-
-    do {
-      newNumber = Math.floor(Math.random() * LARGEST_NUMBER) + 1;
-    } while (newNumber === number || slots.includes(newNumber));
-    // need to check against both because slots isnt updated yet
-
-    return newNumber;
-  };
-
-  if (autoGenerate && !number) {
-    setNumber(generateNewNumber());
-  }
 
   const handlePlaceNumber = (index: number) => {
     // if there's no number set, then ignore the click
-    if (!number) {
+    if (!currentNumber) {
       return;
     }
 
-    if (!isValidPlacement(index, number, slots)) {
+    if (!isValidPlacement(index, currentNumber, slots)) {
       setHasError(true);
       return;
     }
 
     // @ts-ignore-next-line - "with" is fine!
-    setSlots((oldSlots: number[]) => oldSlots.with(index, number));
+    setSlots((oldSlots: number[]) => oldSlots.with(index, currentNumber));
     if (autoGenerate) {
-      setNumber(generateNewNumber());
+      setNumber(generateNewNumber(currentNumber, slots));
     } else {
-      setNumber(undefined);
+      setNumber(null);
     }
 
     setScore((x) => x + 1);
   };
+
+  if (autoGenerate && !currentNumber) {
+    setNumber(generateNewNumber(currentNumber, slots));
+  }
 
   return (
     <div
@@ -88,6 +88,9 @@ export const Game = () => {
       />
       Score: {score}
       <Slots handlePlaceNumber={handlePlaceNumber} hasError={hasError} />
+      <GameOver
+        visible={currentNumber !== null && isGameOver(currentNumber, slots)}
+      />
     </div>
   );
 };

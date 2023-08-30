@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { ARRAY_SIZE, numberAtom, slotsAtom } from "./atoms";
+import { slotsAtom, ARRAY_SIZE, currentNumberAtom } from "./store";
 
 type SlotsProps = {
   handlePlaceNumber: (index: number) => void;
@@ -18,7 +18,7 @@ export const Slots: React.FC<SlotsProps> = ({
   hasError,
 }) => {
   const [slots] = useAtom(slotsAtom);
-  const [number = 0] = useAtom(numberAtom);
+  const [currentNumber] = useAtom(currentNumberAtom);
 
   // there's only one continuous set of slots where this number can go
   // find the bounds of it
@@ -30,12 +30,12 @@ export const Slots: React.FC<SlotsProps> = ({
       return true;
     }
 
-    if (number > s) {
+    if (currentNumber && currentNumber > s) {
       lowerValidIndex = index + 1;
       return true;
     }
 
-    if (number < s) {
+    if (currentNumber && currentNumber < s) {
       higherValidIndex = index - 1;
       return false;
     }
