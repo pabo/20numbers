@@ -10,7 +10,7 @@ export const LARGEST_NUMBER = 1000;
 export const currentNumberAtom = atomWithStorage<number | null>("currentNumber", null);
 export const slotsAtom = atomWithStorage("slots", emptySlots);
 export const autoGenerateAtom = atomWithStorage("autoGenerate", true);
-export const highlightsAtom = atomWithStorage("highlights", false);
+export const highlightsAtom = atomWithStorage("highlights", true);
 export const scoreAtom = atomWithStorage("score", ARRAY_SIZE);
 export const scoresAtom = atomWithStorage<number[]>("scores", []);
 
