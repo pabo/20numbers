@@ -1,7 +1,6 @@
 import "./App.css";
 import githubImgUrl from "./assets/github-mark.png";
 import { useState } from "react";
-import { Slots } from "./Slots";
 import { useAtom } from "jotai";
 import { Controls } from "./Controls";
 import {
@@ -13,10 +12,9 @@ import {
   generateNewNumber,
   moveOrderAtom,
   oddsHistoryAtom,
-  scoreAtom,
+  scoresAtom,
   slotsAtom,
 } from "./store";
-import { GameState } from "./GameState";
 import { OddsHistory } from "./OddsHistory";
 import { Game } from "./Game";
 
@@ -25,17 +23,17 @@ export const App = () => {
 
   const [currentNumber, setNumber] = useAtom(currentNumberAtom);
   const [slots, setSlots] = useAtom(slotsAtom);
+  const [, setScores] = useAtom(scoresAtom);
   const [autoGenerate] = useAtom(autoGenerateAtom);
-  const [, setScore] = useAtom(scoreAtom);
   const [, setOddsHistory] = useAtom(oddsHistoryAtom);
   const [, setMoveOrder] = useAtom(moveOrderAtom);
 
   const reset = () => {
     setNumber(autoGenerate ? generateNewNumber(currentNumber, slots) : null);
     setSlots(emptySlots);
-    setScore(ARRAY_SIZE);
     setOddsHistory([]);
     setMoveOrder([]);
+    setScores((scores) => [...scores, ARRAY_SIZE]);
   };
 
   const setNumberIfNotAlreadySet = (newNumber: number) => {
@@ -43,10 +41,6 @@ export const App = () => {
       setNumber(newNumber);
     }
   };
-
-  if (autoGenerate && !currentNumber) {
-    setNumber(generateNewNumber(currentNumber, slots));
-  }
 
   return (
     <>

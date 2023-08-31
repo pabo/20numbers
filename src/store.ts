@@ -5,29 +5,45 @@ export const ARRAY_SIZE = 20;
 export const emptySlots = new Array(ARRAY_SIZE).fill("");
 export const LARGEST_NUMBER = 1000;
 
+export const generateNewNumber = (number: number | null, slots: ISlot[]) => {
+  let newNumber;
+
+  // TODO: BUG sometimes this generates a duplicate number
+  do {
+    newNumber = Math.floor(Math.random() * LARGEST_NUMBER) + 1;
+  } while (newNumber === number || slots.includes(newNumber));
+  // need to check against both because slots isnt updated yet
+
+  return newNumber;
+};
 
 // TODO: can a store reference the atoms directly? Or do they need the components that
 // call them to pass in the current values? Seems like the latter.
 // ... WELLLLL, you can just use derived atoms (like I do below in oddsAtom)
+// what about an atom that takes an arg?
 
 // atomic
-// TODO: BUG refreshing an ended game gets a new current number
+export const autoGenerateAtom = atomWithStorage("autoGenerate", true);
+export const highlightsAtom = atomWithStorage("highlights", true);
+
 export const currentNumberAtom = atomWithStorage<number | null>(
   "currentNumber",
-  null
+  generateNewNumber(0, [])
 );
 
 export const slotsAtom = atomWithStorage("slots", emptySlots);
-export const autoGenerateAtom = atomWithStorage("autoGenerate", true);
-export const highlightsAtom = atomWithStorage("highlights", true);
-export const scoreAtom = atomWithStorage("score", ARRAY_SIZE);
-export const scoresAtom = atomWithStorage<number[]>("scores", []);
-export const hoveredSlotAtom = atomWithStorage<number | null>("hovered", null);
-export const oddsHistoryAtom = atomWithStorage<number[]>("oddsHistory", []);
 export const moveOrderAtom = atomWithStorage<number[]>("moveOrder", []);
+export const hoveredSlotAtom = atomWithStorage<number | null>("hovered", null);
 export const hoveredOddsAtom = atom<number | undefined>(undefined);
+export const oddsHistoryAtom = atomWithStorage<number[]>("oddsHistory", []);
+export const scoresAtom = atomWithStorage<number[]>("scores", [ARRAY_SIZE]);
 
 // derived
+export const scoreAtom = atom(get => {
+  return ARRAY_SIZE - get(moveOrderAtom).length;
+});
+
+
 export const currentNumberStringAtom = atom(
   (get) => get(currentNumberAtom)?.toString() || ""
 );
@@ -40,7 +56,7 @@ export const gameOverAtom = atom((get) => {
 });
 
 export const highScoreAtom = atom((get) => {
-  return get(scoresAtom)[0];
+  return get(scoresAtom).sort((a,b) => a-b)[0];
 });
 
 export const slotsWithHoverAtom = atom(get => {
@@ -129,17 +145,6 @@ export const isGameOver = (number: number | null, slots: ISlot[]): boolean => {
   return slots[slots.length - 1] !== "" && number > +slots[slots.length - 1];
 };
 
-export const generateNewNumber = (number: number | null, slots: ISlot[]) => {
-  let newNumber;
-
-  // TODO: BUG sometimes this generates a duplicate number
-  do {
-    newNumber = Math.floor(Math.random() * LARGEST_NUMBER) + 1;
-  } while (newNumber === number || slots.includes(newNumber));
-  // need to check against both because slots isnt updated yet
-
-  return newNumber;
-};
 
 export const isSlotBeforeHoveredOdds = (slotIndex: number, moveOrder: number[], hoveredOddsIndex?: number) => {
   // all the moves in move order -before- the hoveredOddsIndex were before the associated move

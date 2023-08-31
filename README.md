@@ -10,5 +10,8 @@ You can play here: https://pabo.github.io/20numbers/
 - ~~scores, save scores locally~~
 - better visuals
 - ~~track win probability by move~~
-- hover over win probability to show that point in history (maybe fade out newer moves?)
+- ~~hover over win probability to show that point in history (maybe fade out newer moves?)~~
 - organize css (lol)
+- one deterministic game a day
+- sharing
+- splash screen

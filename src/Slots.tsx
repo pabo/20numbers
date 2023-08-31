@@ -88,8 +88,8 @@ export const Slot: React.FC<SlotProps> = ({
     classNames.push("filled");
   }
 
-  classNames.push(isValid ? "valid" : "invalid");
-  classNames.push(highlights ? "highlights" : "");
+  classNames.push(currentNumber !== null && isValid ? "valid" : "invalid");
+  classNames.push(currentNumber !== null && highlights ? "highlights" : "");
   classNames.push(
     isSlotBeforeHoveredOdds(index, moveOrder, hoveredOdds) ? "history-fade" : ""
   );

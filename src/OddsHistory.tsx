@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import {
   ARRAY_SIZE,
+  currentNumberAtom,
   gameOverAtom,
   hoveredOddsAtom,
   hoveredSlotAtom,
@@ -13,6 +14,7 @@ export const OddsHistory = () => {
   const [odds] = useAtom(oddsAtom);
   const [gameOver] = useAtom(gameOverAtom);
   const [hoveredSlot] = useAtom(hoveredSlotAtom);
+  const [currentNumber] = useAtom(currentNumberAtom);
 
   return (
     <div className="odds flex-half">
@@ -27,7 +29,7 @@ export const OddsHistory = () => {
         {oddsHistory.map((odds, index) => (
           <Odd key={index} value={odds} index={index} />
         ))}
-        {!gameOver && hoveredSlot !== null && (
+        {!gameOver && currentNumber !== null && hoveredSlot !== null && (
           <Odd value={odds} index={oddsHistory.length} />
         )}
       </div>
