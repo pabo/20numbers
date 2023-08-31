@@ -3,7 +3,6 @@ import {
   currentNumberStringAtom,
   gameOverAtom,
   highScoreAtom,
-  oddsAtom,
   scoreAtom,
   scoresAtom,
 } from "./store";
@@ -15,7 +14,6 @@ export const GameState: React.FC = () => {
   const [currentNumberString] = useAtom(currentNumberStringAtom);
   const [gameOver] = useAtom(gameOverAtom);
   const [highScore] = useAtom(highScoreAtom);
-  const [odds] = useAtom(oddsAtom);
 
   // TODO: BUG refreshing an ended game adds the score to the scores again
   useEffect(() => {
