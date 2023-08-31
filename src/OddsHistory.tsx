@@ -9,7 +9,7 @@ export const OddsHistory = () => {
     <div className="odds grow">
       <h4>Odds History / Win Probability</h4>
       <p>
-        At each move, what are the odds that the next number generated will
+        After each move, what are the odds that the next number generated will
         allow you to keep playing?
       </p>
       {oddsHistory.map((odds, index) => (
