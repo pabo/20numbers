@@ -147,12 +147,13 @@ div.description {
 
 .slot:not(.filled).invalid:hover span {
   font-weight: bold;
-  opacity: .1;
+  opacity: .3;
   color: red;
 }
 
 .highlights .invalid:hover {
   background-color: #c9c909;
+  opacity: .5;
   cursor: default;
 }
 
@@ -200,6 +201,19 @@ input {
   border: 1px dotted black;
  }
 
+ .odd:hover {
+  border: 1px solid black;
+  cursor: default;
+ }
+
  .wompwomp {
   color: red;
- }
+}
+
+.history-fade span {
+  opacity: .1;
+}
+
+.history-highlight span {
+  font-weight: bold;
+}

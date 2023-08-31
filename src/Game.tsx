@@ -12,6 +12,7 @@ import {
   highlightsAtom,
   hoveredSlotAtom,
   isValidPlacement,
+  moveOrderAtom,
   oddsAtom,
   oddsHistoryAtom,
   scoreAtom,
@@ -31,12 +32,14 @@ export const Game = () => {
   const [, setHoveredSlot] = useAtom(hoveredSlotAtom);
   const [odds] = useAtom(oddsAtom);
   const [, setOddsHistory] = useAtom(oddsHistoryAtom);
+  const [, setMoveOrder] = useAtom(moveOrderAtom);
 
   const reset = () => {
     setNumber(autoGenerate ? generateNewNumber(currentNumber, slots) : null);
     setSlots(emptySlots);
     setScore(ARRAY_SIZE);
     setOddsHistory([]);
+    setMoveOrder([]);
   };
 
   const setNumberIfNotAlreadySet = (newNumber: number) => {
@@ -45,19 +48,21 @@ export const Game = () => {
     }
   };
 
-  const handlePlaceNumber = (index: number) => {
+  const handlePlaceNumber = (selectedSlotIndex: number) => {
     // if there's no number set, then ignore the click
     if (!currentNumber) {
       return;
     }
 
-    if (!isValidPlacement(index, currentNumber, slots)) {
+    if (!isValidPlacement(selectedSlotIndex, currentNumber, slots)) {
       setHasError(true);
       return;
     }
 
-    // @ts-ignore-next-line - "with" is fine!
-    setSlots((oldSlots: number[]) => oldSlots.with(index, currentNumber));
+    setSlots((oldSlots: number[]) =>
+      // @ts-ignore-next-line - "with" is fine!
+      oldSlots.with(selectedSlotIndex, currentNumber)
+    );
     if (autoGenerate) {
       setNumber(generateNewNumber(currentNumber, slots));
     } else {
@@ -68,6 +73,9 @@ export const Game = () => {
 
     // add odds to history
     setOddsHistory((history) => [...history, odds]);
+
+    // record the move order
+    setMoveOrder((moveOrder: number[]) => [...moveOrder, selectedSlotIndex]);
 
     setHoveredSlot(null);
   };

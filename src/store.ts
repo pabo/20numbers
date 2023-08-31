@@ -24,6 +24,8 @@ export const scoreAtom = atomWithStorage("score", ARRAY_SIZE);
 export const scoresAtom = atomWithStorage<number[]>("scores", []);
 export const hoveredSlotAtom = atomWithStorage<number | null>("hovered", null);
 export const oddsHistoryAtom = atomWithStorage<number[]>("oddsHistory", []);
+export const moveOrderAtom = atomWithStorage<number[]>("moveOrder", []);
+export const hoveredOddsAtom = atom<number | undefined>(undefined);
 
 // derived
 export const currentNumberStringAtom = atom(
@@ -138,4 +140,19 @@ export const generateNewNumber = (number: number | null, slots: ISlot[]) => {
 
   return newNumber;
 };
+
+export const isSlotBeforeHoveredOdds = (slotIndex: number, moveOrder: number[], hoveredOddsIndex?: number) => {
+  // all the moves in move order -before- the hoveredOddsIndex were before the associated move
+  // find the slotIndex in the moveOrder array and see whether it occurred before the hoveredOddsIndex
+
+  const indexOfMoveThatWroteToSlot = moveOrder.indexOf(slotIndex);
+
+  return hoveredOddsIndex !== undefined && indexOfMoveThatWroteToSlot > hoveredOddsIndex;
+}
+
+export const isSlotTheHoveredOdds = (slotIndex: number, moveOrder: number[], hoveredOddsIndex?: number) => {
+  const indexOfMoveThatWroteToSlot = moveOrder.indexOf(slotIndex);
+
+  return hoveredOddsIndex !== undefined && indexOfMoveThatWroteToSlot === hoveredOddsIndex;
+}
 
