@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import * as seedrandom from 'seedrandom';
+import seedrandom from 'seedrandom';
 
 export const ARRAY_SIZE = 20;
 export const emptySlots = new Array(ARRAY_SIZE).fill("");
@@ -10,7 +10,8 @@ export const LARGEST_NUMBER = 1000;
 export const generateNumbersFromSeed = (seed?: string) => {
   const date = new Date();
 
-  const rng = seedrandom(seed || `${date.getFullYear()}${date.getMonth()}${date.getDate()}`);
+  console.log("v2 seedrandom is", seedrandom)
+  const rng = seedrandom(seed ? seed : `${date.getFullYear()}${date.getMonth()}${date.getDate()}`);
   const getRandomNumberInRange = () => {
     return Math.floor(rng() * LARGEST_NUMBER) + 1;
   }
@@ -46,6 +47,7 @@ export const hoveredSlotAtom = atomWithStorage<number | null>("hovered", null);
 export const hoveredOddsAtom = atom<number | undefined>(undefined);
 export const oddsHistoryAtom = atomWithStorage<number[]>("oddsHistory", []);
 export const scoresAtom = atomWithStorage<number[]>("scores", [ARRAY_SIZE]);
+export const dailyModeAtom = atomWithStorage("dailyMode", true);
 
 // derived
 export const canShowNumberAtom = atom(get =>  {

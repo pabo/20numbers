@@ -6,6 +6,7 @@ import { Controls } from "./Controls";
 import {
   ARRAY_SIZE,
   LARGEST_NUMBER,
+  dailyModeAtom,
   emptySlots,
   generateNumbersFromSeed,
   moveOrderAtom,
@@ -25,6 +26,7 @@ export const App = () => {
   const [, setOddsHistory] = useAtom(oddsHistoryAtom);
   const [, setMoveOrder] = useAtom(moveOrderAtom);
   const [, setNumbers] = useAtom(numbersAtom);
+  const [, setDailyMode] = useAtom(dailyModeAtom);
 
   const resetRandom = () => {
     setSlots(emptySlots);
@@ -32,6 +34,7 @@ export const App = () => {
     setMoveOrder([]);
     setScores((scores) => [...scores, ARRAY_SIZE]);
     setNumbers(generateNumbersFromSeed(Math.random().toString()));
+    setDailyMode(false);
   };
 
   const resetDaily = () => {
@@ -40,6 +43,7 @@ export const App = () => {
     setMoveOrder([]);
     setScores((scores) => [...scores, ARRAY_SIZE]);
     setNumbers(generateNumbersFromSeed());
+    setDailyMode(true);
   };
 
   return (
