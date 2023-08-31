@@ -6,10 +6,7 @@ import { Controls } from "./Controls";
 import {
   ARRAY_SIZE,
   LARGEST_NUMBER,
-  autoGenerateAtom,
-  currentNumberAtom,
   emptySlots,
-  generateNewNumber,
   moveOrderAtom,
   oddsHistoryAtom,
   scoresAtom,
@@ -21,25 +18,17 @@ import { Game } from "./Game";
 export const App = () => {
   const [, setHasError] = useState(false);
 
-  const [currentNumber, setNumber] = useAtom(currentNumberAtom);
-  const [slots, setSlots] = useAtom(slotsAtom);
+  const [, setSlots] = useAtom(slotsAtom);
   const [, setScores] = useAtom(scoresAtom);
-  const [autoGenerate] = useAtom(autoGenerateAtom);
   const [, setOddsHistory] = useAtom(oddsHistoryAtom);
   const [, setMoveOrder] = useAtom(moveOrderAtom);
 
   const reset = () => {
-    setNumber(autoGenerate ? generateNewNumber(currentNumber, slots) : null);
+    // setNumber(autoGenerate ? generateTodaysNumbers()[0] : null);
     setSlots(emptySlots);
     setOddsHistory([]);
     setMoveOrder([]);
     setScores((scores) => [...scores, ARRAY_SIZE]);
-  };
-
-  const setNumberIfNotAlreadySet = (newNumber: number) => {
-    if (!currentNumber) {
-      setNumber(newNumber);
-    }
   };
 
   return (
@@ -63,11 +52,7 @@ export const App = () => {
           <OddsHistory />
         </div>
         <div>
-          <Controls
-            reset={reset}
-            generateNewNumber={generateNewNumber}
-            setNumberIfNotAlreadySet={setNumberIfNotAlreadySet}
-          />
+          <Controls reset={reset} />
         </div>
       </div>
     </>

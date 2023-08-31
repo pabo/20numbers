@@ -4,33 +4,33 @@ import { Slots } from "./Slots";
 import {
   currentNumberAtom,
   slotsAtom,
-  autoGenerateAtom,
   hoveredSlotAtom,
   oddsAtom,
   oddsHistoryAtom,
   moveOrderAtom,
   isValidPlacement,
-  generateNewNumber,
   scoresAtom,
-  scoreAtom,
+  generatedAtom,
+  canShowNumberAtom,
 } from "./store";
 import { GameState } from "./GameState";
 
 export const Game = () => {
   const [hasError, setHasError] = useState(false);
 
-  const [currentNumber, setNumber] = useAtom(currentNumberAtom);
+  const [currentNumber] = useAtom(currentNumberAtom);
   const [slots, setSlots] = useAtom(slotsAtom);
   const [, setScores] = useAtom(scoresAtom);
-  const [autoGenerate] = useAtom(autoGenerateAtom);
   const [, setHoveredSlot] = useAtom(hoveredSlotAtom);
   const [odds] = useAtom(oddsAtom);
   const [, setOddsHistory] = useAtom(oddsHistoryAtom);
   const [, setMoveOrder] = useAtom(moveOrderAtom);
+  const [, setGenerated] = useAtom(generatedAtom);
+  const [canShowNumber] = useAtom(canShowNumberAtom);
 
   const handlePlaceNumber = (selectedSlotIndex: number) => {
     // if there's no number set, then ignore the click
-    if (currentNumber === null) {
+    if (!canShowNumber) {
       return;
     }
 
@@ -43,11 +43,6 @@ export const Game = () => {
       // @ts-ignore-next-line - "with" is fine!
       oldSlots.with(selectedSlotIndex, currentNumber)
     );
-    if (autoGenerate) {
-      setNumber(generateNewNumber(currentNumber, slots));
-    } else {
-      setNumber(null);
-    }
 
     // add odds to history
     setOddsHistory((history) => [...history, odds]);
@@ -62,6 +57,8 @@ export const Game = () => {
       // @ts-ignore-next-line - "with" is fine!
       scores.with(scores.length - 1, scores[scores.length - 1] - 1)
     );
+
+    setGenerated(false);
   };
 
   return (

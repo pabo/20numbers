@@ -9,6 +9,7 @@ import {
   moveOrderAtom,
   isSlotTheHoveredOdds,
   highlightsAtom,
+  canShowNumberAtom,
 } from "./store";
 
 type SlotsProps = {
@@ -81,6 +82,7 @@ export const Slot: React.FC<SlotProps> = ({
   const [hoveredOdds] = useAtom(hoveredOddsAtom);
   const [moveOrder] = useAtom(moveOrderAtom);
   const [highlights] = useAtom(highlightsAtom);
+  const [canShowNumber] = useAtom(canShowNumberAtom);
 
   const classNames = ["slot"];
 
@@ -88,8 +90,8 @@ export const Slot: React.FC<SlotProps> = ({
     classNames.push("filled");
   }
 
-  classNames.push(currentNumber !== null && isValid ? "valid" : "invalid");
-  classNames.push(currentNumber !== null && highlights ? "highlights" : "");
+  classNames.push(canShowNumber && isValid ? "valid" : "invalid");
+  classNames.push(canShowNumber && highlights ? "highlights" : "");
   classNames.push(
     isSlotBeforeHoveredOdds(index, moveOrder, hoveredOdds) ? "history-fade" : ""
   );
@@ -106,7 +108,7 @@ export const Slot: React.FC<SlotProps> = ({
       onMouseOver={isValid ? () => setHoveredSlot(index) : () => {}}
       onMouseOut={isValid ? () => setHoveredSlot(null) : () => {}}
     >
-      <span>{slot ? slot : currentNumber}</span>
+      <span>{slot ? slot : canShowNumber ? currentNumber : ""}</span>
     </li>
   );
 };

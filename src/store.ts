@@ -1,21 +1,33 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import * as seedrandom from 'seedrandom';
+// TODO: typings
 
 export const ARRAY_SIZE = 20;
 export const emptySlots = new Array(ARRAY_SIZE).fill("");
 export const LARGEST_NUMBER = 1000;
 
-export const generateNewNumber = (number: number | null, slots: ISlot[]) => {
-  let newNumber;
+export const generateTodaysNumbers = () => {
+  const date = new Date();
+  console.log("seeding with ", `${date.getFullYear()}${date.getMonth()}${date.getDate()}`)
+  const rng = seedrandom(`${date.getFullYear()}${date.getMonth()}${date.getDate()}`);
+  const getRandomNumberInRange = () => {
+    return Math.floor(rng() * LARGEST_NUMBER) + 1;
+  }
 
-  // TODO: BUG sometimes this generates a duplicate number
-  do {
-    newNumber = Math.floor(Math.random() * LARGEST_NUMBER) + 1;
-  } while (newNumber === number || slots.includes(newNumber));
-  // need to check against both because slots isnt updated yet
-
-  return newNumber;
-};
+  const todaysNumbers: number[] = [];
+  let candidate;
+ 
+  for (let i=0; i<ARRAY_SIZE; i++) {
+    do {
+      candidate = getRandomNumberInRange()
+    } while (todaysNumbers.includes(candidate))
+    todaysNumbers.push(candidate);
+  }
+  
+  console.log(todaysNumbers)
+  return todaysNumbers;
+}
 
 // TODO: can a store reference the atoms directly? Or do they need the components that
 // call them to pass in the current values? Seems like the latter.
@@ -23,13 +35,11 @@ export const generateNewNumber = (number: number | null, slots: ISlot[]) => {
 // what about an atom that takes an arg?
 
 // atomic
-export const autoGenerateAtom = atomWithStorage("autoGenerate", true);
-export const highlightsAtom = atomWithStorage("highlights", true);
 
-export const currentNumberAtom = atomWithStorage<number | null>(
-  "currentNumber",
-  generateNewNumber(0, [])
-);
+export const todaysNumbersAtom = atomWithStorage("todaysNumbers", generateTodaysNumbers());
+export const autoGenerateAtom = atomWithStorage("autoGenerate", true);
+export const generatedAtom = atom(false);
+export const highlightsAtom = atomWithStorage("highlights", true);
 
 export const slotsAtom = atomWithStorage("slots", emptySlots);
 export const moveOrderAtom = atomWithStorage<number[]>("moveOrder", []);
@@ -39,10 +49,23 @@ export const oddsHistoryAtom = atomWithStorage<number[]>("oddsHistory", []);
 export const scoresAtom = atomWithStorage<number[]>("scores", [ARRAY_SIZE]);
 
 // derived
+export const canShowNumberAtom = atom(get =>  {
+  const generated = get(generatedAtom);
+  const autoGenerate = get(autoGenerateAtom);
+
+  return autoGenerate || generated;
+})
+
+export const currentNumberAtom = atom(get => {
+  const numberIndex = get(moveOrderAtom).length;
+  const todaysNumbers = get(todaysNumbersAtom);
+
+  return todaysNumbers[numberIndex];
+})
+
 export const scoreAtom = atom(get => {
   return ARRAY_SIZE - get(moveOrderAtom).length;
 });
-
 
 export const currentNumberStringAtom = atom(
   (get) => get(currentNumberAtom)?.toString() || ""
@@ -145,7 +168,6 @@ export const isGameOver = (number: number | null, slots: ISlot[]): boolean => {
   return slots[slots.length - 1] !== "" && number > +slots[slots.length - 1];
 };
 
-
 export const isSlotBeforeHoveredOdds = (slotIndex: number, moveOrder: number[], hoveredOddsIndex?: number) => {
   // all the moves in move order -before- the hoveredOddsIndex were before the associated move
   // find the slotIndex in the moveOrder array and see whether it occurred before the hoveredOddsIndex
@@ -160,4 +182,3 @@ export const isSlotTheHoveredOdds = (slotIndex: number, moveOrder: number[], hov
 
   return hoveredOddsIndex !== undefined && indexOfMoveThatWroteToSlot === hoveredOddsIndex;
 }
-
