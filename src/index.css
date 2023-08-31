@@ -87,8 +87,11 @@ button:focus-visible {
 .row {
   display: flex;
   flex-direction: row;
+}
+
+.gap {
   justify-content: space-between;
-  gap: 50px;
+  gap: 20px;
 }
 
 .grow {
@@ -100,10 +103,6 @@ button:focus-visible {
   flex-direction: column;
 }
 
-.slots {
-  width: 200px;
-}
-
 .odds{
   width: 200px;
   text-align: left;
@@ -111,11 +110,6 @@ button:focus-visible {
 
 div.main {
   width: 600px;
-}
-
-div.game {
-  width: 400px;
-
 }
 
 div.description {
@@ -151,13 +145,13 @@ div.description {
   color: red;
 }
 
-.highlights .invalid:hover {
+.highlights.invalid:hover {
   background-color: #c9c909;
   opacity: .5;
   cursor: default;
 }
 
-.highlights .valid{
+.highlights.valid{
   background-color: #09c9c9 
 }
 
@@ -195,16 +189,46 @@ input {
  }
 
  .odd {
-  background-color: yellow;
   text-align: right;
   padding-right: 5px;
-  border: 1px dotted black;
- }
-
- .odd:hover {
-  border: 1px solid black;
+  gap: 5px;
   cursor: default;
  }
+
+ .oddBar {
+  background-color: yellow;
+  border: 1px dotted black;
+  height: 85%
+ }
+
+ .odd:hover .oddBar {
+  border: 1px solid black;
+ }
+
+ .odd:hover .oddLabel {
+  font-weight: bold;
+ }
+
+ .odd:hover .oddOdds {
+  font-weight: bold;
+ }
+
+ .oddBarContainer {
+  width: 60%
+ }
+
+ .oddLabel {
+  flex-basis: 30px;
+ }
+
+ .oddOdds {
+  text-align: right;
+ }
+
+ /* .odd:hover {
+  border: 1px solid black;
+  cursor: default;
+ } */
 
  .wompwomp {
   color: red;
@@ -216,4 +240,16 @@ input {
 
 .history-highlight span {
   font-weight: bold;
+}
+
+.column-intro {
+  height: 150px;
+}
+
+.flex-half {
+  flex-basis: 50%
+}
+
+ol {
+  margin: 0px;
 }

@@ -25,13 +25,15 @@ export const Controls: React.FC<ControlsProps> = ({
 
   return (
     <div className="controls">
-      <button
-        onClick={() =>
-          setNumberIfNotAlreadySet(generateNewNumber(currentNumber, slots))
-        }
-      >
-        Generate
-      </button>
+      {!autoGenerate && (
+        <button
+          onClick={() =>
+            setNumberIfNotAlreadySet(generateNewNumber(currentNumber, slots))
+          }
+        >
+          Generate
+        </button>
+      )}
       <button onClick={reset}>Reset</button>
       <br />
       auto-generate?{" "}

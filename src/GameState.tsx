@@ -26,12 +26,12 @@ export const GameState: React.FC = () => {
 
   return (
     <div>
-      <h2 className="score">
+      <h4 className="score">
         Current: {score} Best: {highScore}
-      </h2>
-      <h2 className={gameOver ? "wompwomp" : ""}>{currentNumberString}</h2>
+      </h4>
+      <h1 className={gameOver ? "wompwomp" : ""}>{currentNumberString}</h1>
       <h2>{gameOver && score === 0 && "Holy Shit, you did it!"}</h2>
-      <h2>{gameOver && score !== 0 && "Game Over!"}</h2>
+      {/* <h2>{gameOver && score !== 0 && "Game Over!"}</h2> */}
     </div>
   );
 };

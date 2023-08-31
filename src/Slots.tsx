@@ -8,6 +8,7 @@ import {
   hoveredOddsAtom,
   moveOrderAtom,
   isSlotTheHoveredOdds,
+  highlightsAtom,
 } from "./store";
 
 type SlotsProps = {
@@ -79,6 +80,7 @@ export const Slot: React.FC<SlotProps> = ({
   const [, setHoveredSlot] = useAtom(hoveredSlotAtom);
   const [hoveredOdds] = useAtom(hoveredOddsAtom);
   const [moveOrder] = useAtom(moveOrderAtom);
+  const [highlights] = useAtom(highlightsAtom);
 
   const classNames = ["slot"];
 
@@ -87,6 +89,7 @@ export const Slot: React.FC<SlotProps> = ({
   }
 
   classNames.push(isValid ? "valid" : "invalid");
+  classNames.push(highlights ? "highlights" : "");
   classNames.push(
     isSlotBeforeHoveredOdds(index, moveOrder, hoveredOdds) ? "history-fade" : ""
   );
