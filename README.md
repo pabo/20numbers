@@ -7,5 +7,8 @@ This is a game where you try to create an ordered list of randomly generated num
 You can play here: https://pabo.github.io/20numbers/
 
 ## TODOs
-- scores, save scores locally
+- ~~scores, save scores locally~~
 - better visuals
+- ~~track win probability by move~~
+- hover over win probability to show that point in history (maybe fade out newer moves?)
+- organize css (lol)
