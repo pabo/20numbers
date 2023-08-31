@@ -8,6 +8,7 @@ export const LARGEST_NUMBER = 1000;
 
 // TODO: can a store reference the atoms directly? Or do they need the components that
 // call them to pass in the current values? Seems like the latter.
+// ... WELLLLL, you can just use derived atoms (like I do below in oddsAtom)
 
 // atomic
 // TODO: BUG refreshing an ended game gets a new current number
@@ -15,18 +16,20 @@ export const currentNumberAtom = atomWithStorage<number | null>(
   "currentNumber",
   null
 );
+
 export const slotsAtom = atomWithStorage("slots", emptySlots);
 export const autoGenerateAtom = atomWithStorage("autoGenerate", true);
 export const highlightsAtom = atomWithStorage("highlights", true);
 export const scoreAtom = atomWithStorage("score", ARRAY_SIZE);
 export const scoresAtom = atomWithStorage<number[]>("scores", []);
-
-export const hoveredSlotAtom = atom<number | null>(null);
+export const hoveredSlotAtom = atomWithStorage<number | null>("hovered", null);
+export const oddsHistoryAtom = atomWithStorage<number[]>("oddsHistory", []);
 
 // derived
 export const currentNumberStringAtom = atom(
   (get) => get(currentNumberAtom)?.toString() || ""
 );
+
 export const gameOverAtom = atom((get) => {
   const currentNumber = get(currentNumberAtom);
   const slots = get(slotsAtom);
@@ -44,7 +47,40 @@ export const slotsWithHoverAtom = atom(get => {
   const currentNumber = get(currentNumberAtom);
 
   // @ts-ignore-next-line - "with" is fine!
-  return slots.with(hoveredSlot, currentNumber);
+  return hoveredSlot === null ? slots : slots.with(hoveredSlot, currentNumber);
+})
+
+export const oddsAtom = atom(get => {
+  const slots= get(slotsWithHoverAtom);
+
+  // There are slightly fewer possible next numbers because we won't generate any duplicates
+  const validNextNumbers =
+    LARGEST_NUMBER - slots.filter((slot: ISlot) => slot !== "").length;
+
+  let gameEndingNumbers = 0;
+
+  // before first slot
+  gameEndingNumbers += slots[0] === "" ? 0 : slots[0] - 1;
+
+  let prevSlot: ISlot = "";
+  // The only numbers that would end the game are those between adjacent non-empty slots
+  for (const slot of slots) {
+    if (slot === "") {
+      prevSlot = slot;
+      continue;
+    }
+
+    if (prevSlot !== "") {
+      gameEndingNumbers += slot - prevSlot - 1;
+    }
+
+    prevSlot = slot;
+  }
+
+  // after last slot
+  gameEndingNumbers += slots[slots.length-1] === "" ? 0 : LARGEST_NUMBER - slots[slots.length-1] -1;
+
+  return Math.round(100 * 100 * gameEndingNumbers / validNextNumbers) / 100;
 })
 
 
@@ -103,34 +139,3 @@ export const generateNewNumber = (number: number | null, slots: ISlot[]) => {
   return newNumber;
 };
 
-export const oddsOfNextNumberEndingGame = ( slots: ISlot[]): string | number => {
-  // if (!currentNumber || hoveredSlot === null) {
-    // return '-';
-  // }
-
-  // There are slightly fewer possible next numbers because we won't generate any duplicates
-  const validNextNumbers =
-    LARGEST_NUMBER - slots.filter((slot: ISlot) => slot !== "").length;
-
-  let gameEndingNumbers = 0;
-
-  // before first slot
-  gameEndingNumbers += slots[0] === "" ? 0 : slots[0] - 1;
-
-  let prevSlot: ISlot = "";
-  // The only numbers that would end the game are those between adjacent non-empty slots
-  for (const slot of slots) {
-    if (slot === "") {
-      prevSlot = slot;
-      continue;
-    }
-
-    if (prevSlot !== "") {
-      gameEndingNumbers += slot - prevSlot - 1;
-    }
-
-    prevSlot = slot;
-  }
-
-  return Math.round(100 * 100 * gameEndingNumbers / validNextNumbers) / 100;
-};

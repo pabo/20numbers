@@ -44,7 +44,7 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
-  cursor: pointer;
+  cursor: pointer;/:-moz-any-link
   transition: border-color 0.25s;
 }
 button:hover {
@@ -84,8 +84,38 @@ button:focus-visible {
   height: 1em;
  }
 
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.slots {
+  width: 200px;
+}
+
+.odds{
+  width: 200px;
+  text-align: left;
+}
+
 div.main {
+  width: 600px;
+}
+
+div.game {
   width: 400px;
+
 }
 
 div.description {
@@ -161,4 +191,11 @@ input {
 
  .visible {
   opacity: 1;
+ }
+
+ .odd {
+  background-color: yellow;
+  text-align: right;
+  padding-right: 5px;
+  border: 1px dotted black;
  }

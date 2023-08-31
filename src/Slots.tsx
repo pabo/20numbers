@@ -47,7 +47,7 @@ export const Slots: React.FC<SlotsProps> = ({
   });
 
   return (
-    <div className={"slots " + (hasError ? "horizontal-shake" : "")}>
+    <div className={"slots grow " + (hasError ? "horizontal-shake" : "")}>
       <ol>
         {slots.map((slot, index) => {
           return (
