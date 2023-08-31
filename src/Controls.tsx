@@ -2,10 +2,14 @@ import { useAtom } from "jotai";
 import { autoGenerateAtom, generatedAtom, highlightsAtom } from "./store";
 
 type ControlsProps = {
-  reset: () => void;
+  resetDaily: () => void;
+  resetRandom: () => void;
 };
 
-export const Controls: React.FC<ControlsProps> = ({ reset }) => {
+export const Controls: React.FC<ControlsProps> = ({
+  resetDaily,
+  resetRandom,
+}) => {
   const [autoGenerate, setAutoGenerate] = useAtom(autoGenerateAtom);
   const [highlights, setHighlights] = useAtom(highlightsAtom);
   const [, setGenerated] = useAtom(generatedAtom);
@@ -21,7 +25,8 @@ export const Controls: React.FC<ControlsProps> = ({ reset }) => {
           Generate
         </button>
       )}
-      <button onClick={reset}>Reset</button>
+      <button onClick={resetDaily}>Reset Daily</button>
+      <button onClick={resetRandom}>Reset Random</button>
       <br />
       auto-generate?{" "}
       <input

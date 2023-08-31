@@ -7,7 +7,9 @@ import {
   ARRAY_SIZE,
   LARGEST_NUMBER,
   emptySlots,
+  generateNumbersFromSeed,
   moveOrderAtom,
+  numbersAtom,
   oddsHistoryAtom,
   scoresAtom,
   slotsAtom,
@@ -22,13 +24,22 @@ export const App = () => {
   const [, setScores] = useAtom(scoresAtom);
   const [, setOddsHistory] = useAtom(oddsHistoryAtom);
   const [, setMoveOrder] = useAtom(moveOrderAtom);
+  const [, setNumbers] = useAtom(numbersAtom);
 
-  const reset = () => {
-    // setNumber(autoGenerate ? generateTodaysNumbers()[0] : null);
+  const resetRandom = () => {
     setSlots(emptySlots);
     setOddsHistory([]);
     setMoveOrder([]);
     setScores((scores) => [...scores, ARRAY_SIZE]);
+    setNumbers(generateNumbersFromSeed(Math.random().toString()));
+  };
+
+  const resetDaily = () => {
+    setSlots(emptySlots);
+    setOddsHistory([]);
+    setMoveOrder([]);
+    setScores((scores) => [...scores, ARRAY_SIZE]);
+    setNumbers(generateNumbersFromSeed());
   };
 
   return (
@@ -52,7 +63,7 @@ export const App = () => {
           <OddsHistory />
         </div>
         <div>
-          <Controls reset={reset} />
+          <Controls resetDaily={resetDaily} resetRandom={resetRandom} />
         </div>
       </div>
     </>

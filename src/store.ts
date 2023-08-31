@@ -1,16 +1,16 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import * as seedrandom from 'seedrandom';
-// TODO: typings
 
 export const ARRAY_SIZE = 20;
 export const emptySlots = new Array(ARRAY_SIZE).fill("");
 export const LARGEST_NUMBER = 1000;
 
-export const generateTodaysNumbers = () => {
+// default seed is date, for the daily puzzle
+export const generateNumbersFromSeed = (seed?: string) => {
   const date = new Date();
-  console.log("seeding with ", `${date.getFullYear()}${date.getMonth()}${date.getDate()}`)
-  const rng = seedrandom(`${date.getFullYear()}${date.getMonth()}${date.getDate()}`);
+
+  const rng = seedrandom(seed || `${date.getFullYear()}${date.getMonth()}${date.getDate()}`);
   const getRandomNumberInRange = () => {
     return Math.floor(rng() * LARGEST_NUMBER) + 1;
   }
@@ -25,7 +25,6 @@ export const generateTodaysNumbers = () => {
     todaysNumbers.push(candidate);
   }
   
-  console.log(todaysNumbers)
   return todaysNumbers;
 }
 
@@ -36,7 +35,7 @@ export const generateTodaysNumbers = () => {
 
 // atomic
 
-export const todaysNumbersAtom = atomWithStorage("todaysNumbers", generateTodaysNumbers());
+export const numbersAtom = atomWithStorage("numbers", generateNumbersFromSeed());
 export const autoGenerateAtom = atomWithStorage("autoGenerate", true);
 export const generatedAtom = atom(false);
 export const highlightsAtom = atomWithStorage("highlights", true);
@@ -58,7 +57,7 @@ export const canShowNumberAtom = atom(get =>  {
 
 export const currentNumberAtom = atom(get => {
   const numberIndex = get(moveOrderAtom).length;
-  const todaysNumbers = get(todaysNumbersAtom);
+  const todaysNumbers = get(numbersAtom);
 
   return todaysNumbers[numberIndex];
 })
