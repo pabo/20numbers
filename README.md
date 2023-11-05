@@ -15,3 +15,4 @@ You can play here: https://pabo.github.io/20numbers/
 - ~~one deterministic game a day~~
 - sharing
 - splash screen
+- Hi Matt!
